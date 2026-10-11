@@ -66,6 +66,11 @@ h2 small{font-size:.85rem;color:var(--muted);font-weight:400}
 .card.hl{outline:3px solid var(--orange);outline-offset:1px}
 .links{display:flex;gap:14px;margin-top:6px}
 .links button{background:none;border:0;padding:0;font:inherit;font-size:.9rem;color:var(--ink);text-decoration:underline;cursor:pointer}
+.lang{position:absolute;top:24px;right:0;display:flex;gap:4px}
+.lang button{border:2px solid var(--ink);background:var(--bg);color:var(--ink);border-radius:8px;padding:3px 10px;font:inherit;font-weight:600;cursor:pointer}
+.lang button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+header{position:relative}
+.en{display:block;font-size:.8rem;color:var(--muted);font-weight:400}
 .foot{color:var(--muted);font-size:.85rem;margin-top:30px}
 </style>
 </head>
@@ -73,22 +78,23 @@ h2 small{font-size:.85rem;color:var(--muted);font-weight:400}
 <div class="wrap">
 <header>
 <svg viewBox="0 0 600 90" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="3"><path d="M0 80H600"/><path d="M150 80V10M162 80V10M438 80V10M450 80V10" stroke-width="7"/><path d="M0 70Q75 72 156 12Q300 120 444 12Q525 72 600 70"/><g stroke-width="1.2" opacity=".7"><path d="M190 40V80M220 58V80M250 70V80M300 76V80M350 70V80M380 58V80M410 40V80M60 64V80M100 52V80M500 52V80M540 64V80"/></g></g></svg>
-<h1>San Francisco picks</h1>
-<p class="sub">Sights, food and shopping for our Oct 18–20 trip. Tap ☆ to save your favorites.</p>
+<div class="lang" role="group" aria-label="Language"><button data-lang="en" aria-pressed="true">EN</button><button data-lang="zh" aria-pressed="false">中文</button></div>
+<h1 data-i="title">San Francisco picks</h1>
+<p class="sub" data-i="sub">Sights, food and shopping for our Oct 18–20 trip. Tap ☆ to save your favorites.</p>
 </header>
-<div class="mapbox"><div class="maphead"><b>Where everything is</b><div class="zoom"><button data-z="city" aria-pressed="true">Whole city</button><button data-z="down" aria-pressed="false">Downtown &amp; Wharf</button></div></div>
+<div class="mapbox"><div class="maphead"><b data-i="where">Where everything is</b><div class="zoom"><button data-z="city" aria-pressed="true" data-i="city">Whole city</button><button data-z="down" aria-pressed="false" data-i="down">Downtown &amp; Wharf</button></div></div>
 <svg id="map" role="img" aria-label="Map of San Francisco with pins for each pick"></svg>
-<div class="legend"><span><i style="background:#2B6CB0"></i>Sights</span><span><i style="background:#2F7D4F"></i>Food</span><span><i style="background:#C0362C"></i>Shopping</span><span><i style="background:#16263A"></i>Hotel</span></div>
-<p class="offmap">Not pinned: SFO Museum (at the airport, ~35 min by BART), Chipotle (several locations), Nosh Cafe (check location). Map is a simplified sketch — use "Open in Maps" for directions.</p></div>
+<div class="legend"><span><i style="background:#2B6CB0"></i><b data-i="sights" style="font-weight:400">Sights</b></span><span><i style="background:#2F7D4F"></i><b data-i="food" style="font-weight:400">Food</b></span><span><i style="background:#C0362C"></i><b data-i="shop" style="font-weight:400">Shopping</b></span><span><i style="background:#16263A"></i><b data-i="hotel" style="font-weight:400">Hotel</b></span></div>
+<p class="offmap" data-i="offmap">Not pinned: SFO Museum (at the airport, ~35 min by BART), Chipotle (several locations), Nosh Cafe (check location). Map is a simplified sketch — use "Open in Maps" for directions.</p></div>
 <div class="bar">
 <div class="seg" role="group" aria-label="Section">
-<button data-sec="all" aria-pressed="true">All</button><button data-sec="sights" aria-pressed="false">Sights</button><button data-sec="food" aria-pressed="false">Food</button><button data-sec="shop" aria-pressed="false">Shopping</button>
+<button data-sec="all" aria-pressed="true" data-i="all">All</button><button data-sec="sights" aria-pressed="false" data-i="sights">Sights</button><button data-sec="food" aria-pressed="false" data-i="food">Food</button><button data-sec="shop" aria-pressed="false" data-i="shop">Shopping</button>
 </div>
-<div class="row"><input type="search" id="q" placeholder="Search by name or area"><label class="chk"><input type="checkbox" id="fav"> Saved only</label></div>
+<div class="row"><input type="search" id="q" placeholder="Search by name or area"><label class="chk"><input type="checkbox" id="fav"> <span data-i="saved">Saved only</span></label></div>
 <div class="chips" id="chips"></div>
 </div>
 <main id="out"></main>
-<p class="foot">Every food spot has vegetarian options. Prices are rough per-person estimates; check hours on Google Maps before going.</p>
+<p class="foot" data-i="foot">Every food spot has vegetarian options. Prices are rough per-person estimates; check hours on Google Maps before going.</p>
 </div>
 <script>
 const D=[
@@ -124,30 +130,68 @@ const COAST=[[37.788,-122.513],[37.760,-122.510],[37.735,-122.506],[37.708,-122.
 const PARK=[[37.7745,-122.5105],[37.7745,-122.4545],[37.7715,-122.4545],[37.7715,-122.4590],[37.7655,-122.4590],[37.7645,-122.5095]];
 const VIEWS={city:{w:-122.52,e:-122.375,n:37.816,s:37.735},down:{w:-122.43,e:-122.392,n:37.8125,s:37.778}};
 const LBL={city:[["Golden Gate Park",37.7725,-122.505],["Mission",37.756,-122.425],["Marina",37.799,-122.442],["Downtown",37.787,-122.397]],down:[["North Beach",37.8015,-122.4115],["Union Sq",37.7855,-122.4145],["Fin. District",37.7930,-122.3975],["Wharf",37.8105,-122.4135]]};
+
+const UI={en:{},zh:{title:"舊金山推薦清單",sub:"10/18–20 行程的景點、美食與購物。點 ☆ 收藏喜歡的地點。",where:"地點分布",city:"全市",down:"市中心與漁人碼頭",sights:"景點",food:"美食",shop:"購物",hotel:"飯店",all:"全部",saved:"只看收藏",
+offmap:"未標示於地圖：SFO 航空博物館（位於機場，搭 BART 約 35 分鐘）、Chipotle（多家分店）、Nosh Cafe（請先確認地點）。地圖為簡化示意圖，路線請點「在地圖中開啟」。",
+foot:"每家餐廳都有素食選項。價格為每人大約估計，出發前請在 Google 地圖確認營業時間。",search:"搜尋名稱或地區",empty:"沒有符合的結果，請清除搜尋或篩選條件。",show:"在地圖上顯示",open:"在地圖中開啟"}};
+document.querySelectorAll("[data-i]").forEach(e=>UI.en[e.dataset.i]=e.textContent);
+Object.assign(UI.en,{search:"Search by name or area",empty:"Nothing matches. Clear the search or filters to see everything.",show:"Show on map",open:"Open in Maps"});
+const CZ={"Waterfront":"海濱","Golden Gate Park":"金門公園","City views":"城市景觀","Airport":"機場","Bakery & café":"烘焙與咖啡","Mexican":"墨西哥料理","Mediterranean":"地中海料理","Pizza & Italian":"披薩與義式","American":"美式","Must-do":"必買",
+"Free":"免費","Bucket list":"必去清單","Closed Mondays":"週一休館","Free to walk":"免費散步","At the airport":"在機場","Mission":"教會區","Marina":"濱海區","Downtown":"市中心","North Beach":"北灘","Union Sq":"聯合廣場","Fin. District":"金融區","Wharf":"碼頭","Club Quarters Hotel":"Club Quarters 飯店"};
+const Z={
+"Ferry Building":["渡輪大廈","內河碼頭（從 Club Quarters 步行可達）","歷史悠久的市集大樓，有在地美食小店與海灣景色。"],
+"Fisherman's Wharf & Pier 39":["漁人碼頭與 39 號碼頭","Jefferson St／內河碼頭","熱鬧的海濱區，有紀念品店、街頭小吃和著名的海獅。"],
+"Ghirardelli Chocolate Experience":["Ghirardelli 巧克力體驗館","Ghirardelli 廣場，North Point St","舊金山經典巧克力品牌旗艦店，有聖代和試吃。"],
+"Palace of Fine Arts":["藝術宮","濱海區","湖畔的宏偉圓頂建築，非常適合拍照。"],
+"de Young Museum":["笛洋美術館","金門公園內","藝術博物館，免費觀景塔可 360° 眺望城市。"],
+"Golden Gate Park":["金門公園","城市西側","大型都市公園，內有日本茶園和花卉溫室。"],
+"Lombard Street viewpoint":["九曲花街觀景點","Hyde 街與 Lombard 街交叉口山頂","「全世界最彎曲的街道」，從山頂拍最好看。"],
+"SFO Museum: Louis A. Turpen Aviation Museum":["SFO 博物館：Louis A. Turpen 航空博物館","SFO 國際航廈，安檢前","免費航空歷史博物館，仿 1930 年代機場候機室設計。"],
+"Arizmendi Bakery":["Arizmendi 烘焙坊","Inner Sunset 區 9th Ave","員工合作社經營的麵包店，每日披薩都是素食。","素食披薩"],
+"Boudin Bakery café":["Boudin 酸種麵包咖啡館","漁人碼頭","知名酸種麵包店，有三明治、沙拉和麵包碗。","素食三明治"],
+"Nosh Cafe & Catering":["Nosh Cafe & Catering","出發前請確認地點","我們清單中的餐廳。","現場詢問"],
+"La Taqueria / El Farolito":["La Taqueria／El Farolito","教會區（BART 到 24th St 站）","經典教會區墨西哥捲餅。","豆子起司捲"],
+"Nopalito":["Nopalito","Inner Sunset 區 9th Ave","使用新鮮食材的內用墨西哥餐廳。","素食料理"],
+"Chipotle":["Chipotle","市中心多家分店","自選配料的墨西哥碗和捲餅。","Sofritas 豆腐／蔬菜"],
+"Sababa":["Sababa","Kearny St，飯店附近","以色列炸豆丸和鷹嘴豆泥餐盤。","炸豆丸"],
+"Golden Boy Pizza":["Golden Boy Pizza","北灘 Green St","知名佛卡夏風格方形披薩。","蔬菜披薩"],
+"Puccini & Pinetti":["Puccini & Pinetti","聯合廣場附近","內用義式餐廳，有義大利麵和披薩。","義大利麵與披薩"],
+"Mel's Drive-In":["Mel's Drive-In","Mission St","復古美式餐館，營業到很晚。","素食漢堡、鬆餅"],
+"Super Duper Burgers":["Super Duper Burgers","市中心 Market St（多家分店之一）","在地漢堡連鎖店。","素食漢堡"],
+"In-N-Out Burger":["In-N-Out Burger","漁人碼頭 Jefferson St","加州經典漢堡。可點隱藏菜單的素食漢堡。","烤起司漢堡"],
+"Cheesecake Factory":["Cheesecake Factory","聯合廣場 Macy's 頂樓","菜單豐富、可俯瞰廣場，價格較高。","多種素食"],
+"Sephora":["Sephora","聯合廣場","美妝與保養品。"],
+"Owala bottle at Target":["Target 買 Owala 水壺","Bush St 或 Metreon（Mission St）","先用 Target App 查庫存。REI 和 Dick's 也有賣。"],
+"Trader Joe's":["Trader Joe's","漁人碼頭附近 401 Bay St","零食和伴手禮。液體類請放託運行李。"]};
+let lang="en";try{lang=localStorage.getItem("sf-lang")||"en"}catch(e){}
+const T=k=>UI[lang][k]||UI.en[k];
+const C=t=>lang==="zh"?(CZ[t]||t):t;
+const F=(x,i)=>lang==="zh"&&Z[x.n]&&Z[x.n][i]?Z[x.n][i]:[x.n,x.l,x.d,x.v][i];
+function applyLang(){document.documentElement.lang=lang==="zh"?"zh-Hant":"en";document.querySelectorAll("[data-i]").forEach(e=>e.textContent=T(e.dataset.i));document.getElementById("q").placeholder=T("search");document.querySelectorAll(".lang button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.lang===lang));document.title=T("title")}
 let sec="all",cat=null,favs={},view="city",sel=null;
 try{favs=JSON.parse(localStorage.getItem("sf-favs")||"{}")}catch(e){}
 const M=q=>"https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(q+", San Francisco, CA");
 const W=600;
 function proj(v){const k=Math.cos(37.78*Math.PI/180);const H=W*(v.n-v.s)/((v.e-v.w)*k);return{H,f:([la,lo])=>[(lo-v.w)/(v.e-v.w)*W,(v.n-la)/(v.n-v.s)*H]}}
 function visible(){const q=document.getElementById("q").value.toLowerCase(),fo=document.getElementById("fav").checked;
-return D.filter(x=>(sec==="all"||x.s===sec)&&(!cat||x.c===cat)&&(!fo||favs[x.n])&&(!q||(x.n+x.l+x.d+x.c).toLowerCase().includes(q)))}
+return D.filter(x=>(sec==="all"||x.s===sec)&&(!cat||x.c===cat)&&(!fo||favs[x.n])&&(!q||(x.n+x.l+x.d+x.c+(Z[x.n]||[]).join("")+(CZ[x.c]||"")).toLowerCase().includes(q)))}
 function drawMap(items){const v=VIEWS[view],{H,f}=proj(v);const svg=document.getElementById("map");svg.setAttribute("viewBox",`0 0 ${W} ${H.toFixed(0)}`);
 const path=p=>"M"+p.map(f).map(a=>a.map(n=>n.toFixed(1)).join(",")).join("L")+"Z";
 const r=view==="city"?13:16;
 let h=`<path class="land" d="${path(COAST)}"/><path class="park" d="${path(PARK)}"/>`;
-h+=LBL[view].map(([t,la,lo])=>{const[x,y]=f([la,lo]);return`<text class="lbl" x="${x}" y="${y}" text-anchor="middle">${t}</text>`}).join("");
+h+=LBL[view].map(([t,la,lo])=>{const[x,y]=f([la,lo]);return`<text class="lbl" x="${x}" y="${y}" text-anchor="middle">${C(t)}</text>`}).join("");
 const pins=[...items.filter(x=>x.g)];
-const [hx,hy]=f(HOTEL.g);h+=`<g class="pin" transform="translate(${hx},${hy})"><title>Club Quarters Hotel</title><circle r="${r}" fill="#16263A"/><text>${HOTEL.e}</text></g>`;
+const [hx,hy]=f(HOTEL.g);h+=`<g class="pin" transform="translate(${hx},${hy})"><title>${C("Club Quarters Hotel")}</title><circle r="${r}" fill="#16263A"/><text>${HOTEL.e}</text></g>`;
 for(const x of pins){const[px,py]=f(x.g);if(px<-20||px>W+20||py<-20||py>H+20)continue;
-h+=`<g class="pin ${sel===x.n?"on":""}" data-n="${x.n}" tabindex="0" role="button" aria-label="${x.n}" transform="translate(${px.toFixed(1)},${py.toFixed(1)})"><title>${x.n}</title><circle r="${sel===x.n?r+4:r}" fill="${COL[x.s]}"/><text>${x.e}</text></g>`}
+h+=`<g class="pin ${sel===x.n?"on":""}" data-n="${x.n}" tabindex="0" role="button" aria-label="${x.n}" transform="translate(${px.toFixed(1)},${py.toFixed(1)})"><title>${F(x,0)}</title><circle r="${sel===x.n?r+4:r}" fill="${COL[x.s]}"/><text>${x.e}</text></g>`}
 svg.innerHTML=h}
 function chips(){const cs=[...new Set(D.filter(x=>sec==="all"||x.s===sec).map(x=>x.c))];if(!cs.includes(cat))cat=null;
-document.getElementById("chips").innerHTML=cs.map(c=>`<button class="chip" aria-pressed="${c===cat}" data-c="${c}">${c}</button>`).join("")}
+document.getElementById("chips").innerHTML=cs.map(c=>`<button class="chip" aria-pressed="${c===cat}" data-c="${c}">${C(c)}</button>`).join("")}
 const id=n=>"c-"+n.replace(/[^a-z0-9]/gi,"");
 function render(){const items=visible();drawMap(items);const out=document.getElementById("out");
-if(!items.length){out.innerHTML='<p class="empty">Nothing matches. Clear the search or filters to see everything.</p>';return}
+if(!items.length){out.innerHTML=`<p class="empty">${T("empty")}</p>`;return}
 let h="";for(const s of ["sights","food","shop"]){for(const c of [...new Set(items.filter(x=>x.s===s).map(x=>x.c))]){const g=items.filter(x=>x.s===s&&x.c===c);
-h+=`<h2>${c} <small>${NAMES[s]}</small></h2><div class="grid">`+g.map(x=>`<article class="card ${sel===x.n?"hl":""}" id="${id(x.n)}"><button class="star" aria-label="Save ${x.n}" aria-pressed="${!!favs[x.n]}" data-n="${x.n}">${favs[x.n]?"★":"☆"}</button><div class="top"><div class="ico" style="background:${COL[x.s]}22">${x.e}</div><div><h3>${x.n}</h3><div class="loc">${x.l}</div></div></div><p class="desc">${x.d}</p><div class="tags">${x.p?`<span class="tag">${x.p}</span>`:""}${x.v?`<span class="tag v">${x.v}</span>`:""}${(x.t||[]).map(t=>`<span class="tag ${t==="Must-do"||t==="Bucket list"?"w":""}">${t}</span>`).join("")}</div><div class="links">${x.g?`<button data-show="${x.n}">Show on map</button>`:""}<a class="map" href="${M(x.q||x.n)}" target="_blank" rel="noopener">Open in Maps</a></div></article>`).join("")+`</div>`}}
+h+=`<h2>${C(c)} <small>${T(s)}</small></h2><div class="grid">`+g.map(x=>`<article class="card ${sel===x.n?"hl":""}" id="${id(x.n)}"><button class="star" aria-label="Save ${x.n}" aria-pressed="${!!favs[x.n]}" data-n="${x.n}">${favs[x.n]?"★":"☆"}</button><div class="top"><div class="ico" style="background:${COL[x.s]}22">${x.e}</div><div><h3>${F(x,0)}${lang==="zh"&&F(x,0)!==x.n?`<span class="en">${x.n}</span>`:""}</h3><div class="loc">${F(x,1)}</div></div></div><p class="desc">${F(x,2)}</p><div class="tags">${x.p?`<span class="tag">${x.p}</span>`:""}${x.v?`<span class="tag v">${F(x,3)}</span>`:""}${(x.t||[]).map(t=>`<span class="tag ${t==="Must-do"||t==="Bucket list"?"w":""}">${C(t)}</span>`).join("")}</div><div class="links">${x.g?`<button data-show="${x.n}">${T("show")}</button>`:""}<a class="map" href="${M(x.q||x.n)}" target="_blank" rel="noopener">${T("open")}</a></div></article>`).join("")+`</div>`}}
 out.innerHTML=h}
 function pick(n,scrollTo){sel=n;const x=D.find(d=>d.n===n);if(x&&x.g){const d=VIEWS.down;const inDown=x.g[0]<d.n&&x.g[0]>d.s&&x.g[1]>d.w&&x.g[1]<d.e;if(view==="down"&&!inDown)setView("city",true)}render();
 if(scrollTo==="card")document.getElementById(id(n))?.scrollIntoView({behavior:"smooth",block:"center"});
@@ -162,7 +206,8 @@ document.getElementById("chips").onclick=e=>{const b=e.target.closest(".chip");i
 document.getElementById("q").oninput=render;document.getElementById("fav").onchange=render;
 document.getElementById("out").onclick=e=>{const st=e.target.closest(".star");if(st){favs[st.dataset.n]=!favs[st.dataset.n];try{localStorage.setItem("sf-favs",JSON.stringify(favs))}catch(err){}render();return}
 const sh=e.target.closest("[data-show]");if(sh)pick(sh.dataset.show,"map")};
-chips();render();
+document.querySelector(".lang").onclick=e=>{const b=e.target.closest("button");if(!b)return;lang=b.dataset.lang;try{localStorage.setItem("sf-lang",lang)}catch(err){}applyLang();chips();render()};
+applyLang();chips();render();
 </script>
 </body>
 </html>
