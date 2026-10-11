@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>San Francisco Picks: Sights, Food & Shopping</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#EEF1F3;--ink:#16263A;--muted:#5B6B7C;--card:#FFFFFF;--line:#D3DAE1;--orange:#C0362C;--veg:#2F7D4F;--vegbg:#E3F1E8;--water:#CFE0EA;--landc:#F7F4EC;--parkc:#CFE5C8;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0F1A26;--ink:#E7EDF3;--muted:#93A3B4;--card:#172434;--line:#2A3B4F;--orange:#E2553F;--veg:#6BC48E;--vegbg:#1C3528;--water:#0B2233;--landc:#1E2C3C;--parkc:#22402F}}
+:root[data-theme="dark"]{--bg:#0F1A26;--ink:#E7EDF3;--muted:#93A3B4;--card:#172434;--line:#2A3B4F;--orange:#E2553F;--veg:#6BC48E;--vegbg:#1C3528;--water:#0B2233;--landc:#1E2C3C;--parkc:#22402F}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Bricolage Grotesque",system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.5}
+.wrap{max-width:760px;margin:0 auto;padding:20px 16px 60px}
+header svg{width:100%;height:auto;display:block;color:var(--orange);margin-top:20px}
+h1{font-size:clamp(2rem,7vw,3rem);font-weight:800;line-height:1.02;margin:14px 0 6px;letter-spacing:-.02em}
+.sub{color:var(--muted);margin:0 0 6px}
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding:12px 0 10px}
+.seg{display:flex;gap:8px}
+.seg button{flex:1;border:2px solid var(--ink);background:transparent;color:var(--ink);border-radius:10px;padding:8px;font:inherit;font-weight:600;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--orange);border-color:var(--orange);color:#fff}
+.row{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;align-items:center}
+input[type=search]{flex:1;min-width:160px;font:inherit;padding:8px 12px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink)}
+.chk{display:flex;gap:6px;align-items:center;font-size:.92rem;cursor:pointer}
+.chk input{accent-color:var(--veg);width:18px;height:18px}
+.chips{display:flex;gap:6px;overflow-x:auto;margin-top:10px;padding-bottom:2px}
+.chip{flex:none;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:99px;padding:4px 12px;font:inherit;font-size:.85rem;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid var(--orange);outline-offset:2px}
+h2{font-size:1.3rem;margin:26px 0 10px;display:flex;align-items:baseline;gap:8px}
+h2 small{font-size:.85rem;color:var(--muted);font-weight:400}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:4px;position:relative}
+.card h3{margin:0;font-size:1.05rem;line-height:1.25;padding-right:26px}
+.loc{font-size:.85rem;color:var(--muted)}
+.desc{font-size:.92rem;margin:2px 0 4px}
+.tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:auto}
+.tag{font-size:.75rem;padding:2px 8px;border-radius:99px;background:var(--bg);color:var(--muted)}
+.tag.v{background:var(--vegbg);color:var(--veg);font-weight:600}
+.tag.w{background:var(--orange);color:#fff}
+.map{color:var(--orange);font-weight:600;text-decoration:none;font-size:.9rem}
+.star{position:absolute;top:8px;right:8px;background:none;border:0;font-size:1.3rem;cursor:pointer;color:var(--muted);line-height:1;padding:4px}
+.star[aria-pressed="true"]{color:var(--orange)}
+.empty{color:var(--muted);padding:20px 0}
+.mapbox{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:10px;margin-top:6px}
+.maphead{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap}
+.maphead b{font-size:1rem}
+.zoom{display:flex;gap:6px}
+.zoom button{border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:8px;padding:4px 10px;font:inherit;font-size:.85rem;cursor:pointer}
+.zoom button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+#map{width:100%;height:auto;display:block;border-radius:10px;background:var(--water);touch-action:manipulation}
+.land{fill:var(--landc);stroke:var(--line);stroke-width:1}
+.park{fill:var(--parkc)}
+.lbl{font:600 11px "Bricolage Grotesque",system-ui,sans-serif;fill:var(--muted);letter-spacing:.06em;text-transform:uppercase}
+.pin{cursor:pointer}
+.pin circle{stroke:#fff;stroke-width:2}
+.pin text{font-size:13px;text-anchor:middle;dominant-baseline:central;pointer-events:none}
+.pin.on circle{stroke:var(--ink);stroke-width:3}
+.legend{display:flex;gap:12px;flex-wrap:wrap;font-size:.8rem;color:var(--muted);margin-top:6px}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:4px;vertical-align:-1px}
+.offmap{font-size:.82rem;color:var(--muted);margin-top:4px}
+.ico{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;font-size:1.5rem;flex:none}
+.top{display:flex;gap:10px;align-items:center}
+.card.hl{outline:3px solid var(--orange);outline-offset:1px}
+.links{display:flex;gap:14px;margin-top:6px}
+.links button{background:none;border:0;padding:0;font:inherit;font-size:.9rem;color:var(--ink);text-decoration:underline;cursor:pointer}
+.foot{color:var(--muted);font-size:.85rem;margin-top:30px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+<svg viewBox="0 0 600 90" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="3"><path d="M0 80H600"/><path d="M150 80V10M162 80V10M438 80V10M450 80V10" stroke-width="7"/><path d="M0 70Q75 72 156 12Q300 120 444 12Q525 72 600 70"/><g stroke-width="1.2" opacity=".7"><path d="M190 40V80M220 58V80M250 70V80M300 76V80M350 70V80M380 58V80M410 40V80M60 64V80M100 52V80M500 52V80M540 64V80"/></g></g></svg>
+<h1>San Francisco picks</h1>
+<p class="sub">Sights, food and shopping for our Oct 18–20 trip. Tap ☆ to save your favorites.</p>
+</header>
+<div class="mapbox"><div class="maphead"><b>Where everything is</b><div class="zoom"><button data-z="city" aria-pressed="true">Whole city</button><button data-z="down" aria-pressed="false">Downtown &amp; Wharf</button></div></div>
+<svg id="map" role="img" aria-label="Map of San Francisco with pins for each pick"></svg>
+<div class="legend"><span><i style="background:#2B6CB0"></i>Sights</span><span><i style="background:#2F7D4F"></i>Food</span><span><i style="background:#C0362C"></i>Shopping</span><span><i style="background:#16263A"></i>Hotel</span></div>
+<p class="offmap">Not pinned: SFO Museum (at the airport, ~35 min by BART), Chipotle (several locations), Nosh Cafe (check location). Map is a simplified sketch — use "Open in Maps" for directions.</p></div>
+<div class="bar">
+<div class="seg" role="group" aria-label="Section">
+<button data-sec="all" aria-pressed="true">All</button><button data-sec="sights" aria-pressed="false">Sights</button><button data-sec="food" aria-pressed="false">Food</button><button data-sec="shop" aria-pressed="false">Shopping</button>
+</div>
+<div class="row"><input type="search" id="q" placeholder="Search by name or area"><label class="chk"><input type="checkbox" id="fav"> Saved only</label></div>
+<div class="chips" id="chips"></div>
+</div>
+<main id="out"></main>
+<p class="foot">Every food spot has vegetarian options. Prices are rough per-person estimates; check hours on Google Maps before going.</p>
+</div>
+<script>
+const D=[
+{s:"sights",c:"Waterfront",e:"⛴️",n:"Ferry Building",l:"Embarcadero (walk from Club Quarters)",d:"Historic market hall with local food shops and bay views.",t:["Free"],g:[37.7955,-122.3937]},
+{s:"sights",c:"Waterfront",e:"🦭",n:"Fisherman's Wharf & Pier 39",l:"Jefferson St / Embarcadero",d:"Busy waterfront with souvenir shops, street food and the famous sea lions.",t:["Free"],g:[37.8087,-122.4098]},
+{s:"sights",c:"Waterfront",e:"🍫",n:"Ghirardelli Chocolate Experience",l:"Ghirardelli Square, North Point St",d:"Flagship of SF's classic chocolate maker — sundaes and samples.",t:["Bucket list"],g:[37.8059,-122.4229]},
+{s:"sights",c:"Waterfront",e:"🏛️",n:"Palace of Fine Arts",l:"Marina District",d:"Grand domed rotunda by a lagoon. Very photogenic.",t:["Free"],g:[37.8029,-122.4484]},
+{s:"sights",c:"Golden Gate Park",e:"🖼️",n:"de Young Museum",l:"Golden Gate Park",d:"Art museum with a free observation tower and 360° views.",t:["Closed Mondays"],q:"de Young Museum",g:[37.7715,-122.4687]},
+{s:"sights",c:"Golden Gate Park",e:"🌳",n:"Golden Gate Park",l:"West side of the city",d:"Huge urban park with the Japanese Tea Garden and Conservatory of Flowers.",t:["Free to walk"],g:[37.7694,-122.4862]},
+{s:"sights",c:"City views",e:"🌀",n:"Lombard Street viewpoint",l:"Top of the hill at Hyde & Lombard",d:"The \"crookedest street\" — best photographed from the top.",t:["Free"],q:"Lombard Street Hyde Street",g:[37.8021,-122.4187]},
+{s:"sights",c:"Airport",e:"✈️",n:"SFO Museum: Louis A. Turpen Aviation Museum",l:"SFO International Terminal, before security",d:"Free aviation history museum styled after the 1930s airport lounge.",t:["Free","At the airport"],q:"Louis A. Turpen Aviation Museum SFO"},
+{s:"food",c:"Bakery & café",e:"🥐",n:"Arizmendi Bakery",l:"9th Ave, Inner Sunset",d:"Worker-owned bakery; the daily pizza is always vegetarian.",p:"~$10",v:"Veg pizza",q:"Arizmendi Bakery 9th Ave",g:[37.7637,-122.4669]},
+{s:"food",c:"Bakery & café",e:"🥖",n:"Boudin Bakery café",l:"Fisherman's Wharf",d:"Famous sourdough bakery — sandwiches, salads, bread bowls.",p:"$15–20",v:"Veg sandwiches",q:"Boudin Bakery Fisherman's Wharf",g:[37.8083,-122.4150]},
+{s:"food",c:"Bakery & café",e:"☕",n:"Nosh Cafe & Catering",l:"Check location before going",d:"From our list.",p:"—",v:"Ask on site"},
+{s:"food",c:"Mexican",e:"🌯",n:"La Taqueria / El Farolito",l:"Mission District (BART to 24th St)",d:"Classic Mission-style burritos.",p:"<$15",v:"Bean & cheese",q:"La Taqueria Mission St",g:[37.7509,-122.4181]},
+{s:"food",c:"Mexican",e:"🌮",n:"Nopalito",l:"9th Ave, Inner Sunset",d:"Sit-down Mexican with fresh ingredients.",p:"$20–25",v:"Veg dishes",q:"Nopalito 9th Ave",g:[37.7652,-122.4655]},
+{s:"food",c:"Mexican",e:"🥗",n:"Chipotle",l:"Several downtown locations",d:"Build-your-own bowls and burritos.",p:"~$12",v:"Sofritas / veggie"},
+{s:"food",c:"Mediterranean",e:"🧆",n:"Sababa",l:"Kearny St, near the hotel",d:"Israeli falafel and hummus plates.",p:"~$15",v:"Falafel",q:"Sababa Kearny St",g:[37.7915,-122.4045]},
+{s:"food",c:"Pizza & Italian",e:"🍕",n:"Golden Boy Pizza",l:"Green St, North Beach",d:"Famous focaccia-style square slices.",p:"$5–10",v:"Veggie slices",q:"Golden Boy Pizza",g:[37.7998,-122.4086]},
+{s:"food",c:"Pizza & Italian",e:"🍝",n:"Puccini & Pinetti",l:"Near Union Square",d:"Sit-down Italian with pasta and pizza.",p:"$20–30",v:"Pasta & pizza",q:"Puccini & Pinetti",g:[37.7868,-122.4120]},
+{s:"food",c:"American",e:"🥞",n:"Mel's Drive-In",l:"Mission St",d:"Retro diner, open late.",p:"$15–25",v:"Veggie burger, pancakes",q:"Mel's Drive-In Mission St",g:[37.7826,-122.4049]},
+{s:"food",c:"American",e:"🍔",n:"Super Duper Burgers",l:"Market St, downtown (one of several)",d:"Local burger chain.",p:"~$15",v:"Veggie burger",g:[37.7860,-122.4030]},
+{s:"food",c:"American",e:"🍟",n:"In-N-Out Burger",l:"Jefferson St, Fisherman's Wharf",d:"California classic. Ask for the off-menu Veggie Burger.",p:"~$10",v:"Grilled Cheese",q:"In-N-Out Burger Jefferson St",g:[37.8078,-122.4185]},
+{s:"food",c:"American",e:"🍰",n:"Cheesecake Factory",l:"Macy's top floor, Union Square",d:"Huge menu with views over the square — pricier.",p:"$35+",v:"Many veg dishes",q:"Cheesecake Factory Union Square",g:[37.7876,-122.4080]},
+{s:"shop",c:"Must-do",e:"💄",n:"Sephora",l:"Union Square",d:"Beauty and cosmetics.",t:["Must-do"],q:"Sephora Union Square",g:[37.7866,-122.4062]},
+{s:"shop",c:"Must-do",e:"🧴",n:"Owala bottle at Target",l:"Bush St or Metreon (Mission St)",d:"Check stock in the Target app. REI and Dick's also carry Owala.",t:["Must-do"],q:"Target 225 Bush St",g:[37.7905,-122.4030]},
+{s:"shop",c:"Must-do",e:"🛒",n:"Trader Joe's",l:"401 Bay St, near Fisherman's Wharf",d:"Snacks and gifts. Liquids go in checked luggage.",t:["Must-do"],q:"Trader Joe's 401 Bay St",g:[37.8053,-122.4160]}
+];
+const HOTEL={e:"🏨",n:"Club Quarters Hotel",g:[37.7946,-122.4012]};
+const COL={sights:"#2B6CB0",food:"#2F7D4F",shop:"#C0362C"};
+const NAMES={sights:"Sights",food:"Food",shop:"Shopping"};
+const COAST=[[37.788,-122.513],[37.760,-122.510],[37.735,-122.506],[37.708,-122.503],[37.708,-122.393],[37.712,-122.381],[37.722,-122.362],[37.735,-122.374],[37.750,-122.386],[37.768,-122.387],[37.780,-122.388],[37.7955,-122.3925],[37.803,-122.399],[37.8095,-122.410],[37.808,-122.421],[37.8075,-122.430],[37.806,-122.443],[37.805,-122.465],[37.810,-122.477],[37.800,-122.485],[37.789,-122.493],[37.786,-122.505]];
+const PARK=[[37.7745,-122.5105],[37.7745,-122.4545],[37.7715,-122.4545],[37.7715,-122.4590],[37.7655,-122.4590],[37.7645,-122.5095]];
+const VIEWS={city:{w:-122.52,e:-122.375,n:37.816,s:37.735},down:{w:-122.43,e:-122.392,n:37.8125,s:37.778}};
+const LBL={city:[["Golden Gate Park",37.7725,-122.505],["Mission",37.756,-122.425],["Marina",37.799,-122.442],["Downtown",37.787,-122.397]],down:[["North Beach",37.8015,-122.4115],["Union Sq",37.7855,-122.4145],["Fin. District",37.7930,-122.3975],["Wharf",37.8105,-122.4135]]};
+let sec="all",cat=null,favs={},view="city",sel=null;
+try{favs=JSON.parse(localStorage.getItem("sf-favs")||"{}")}catch(e){}
+const M=q=>"https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(q+", San Francisco, CA");
+const W=600;
+function proj(v){const k=Math.cos(37.78*Math.PI/180);const H=W*(v.n-v.s)/((v.e-v.w)*k);return{H,f:([la,lo])=>[(lo-v.w)/(v.e-v.w)*W,(v.n-la)/(v.n-v.s)*H]}}
+function visible(){const q=document.getElementById("q").value.toLowerCase(),fo=document.getElementById("fav").checked;
+return D.filter(x=>(sec==="all"||x.s===sec)&&(!cat||x.c===cat)&&(!fo||favs[x.n])&&(!q||(x.n+x.l+x.d+x.c).toLowerCase().includes(q)))}
+function drawMap(items){const v=VIEWS[view],{H,f}=proj(v);const svg=document.getElementById("map");svg.setAttribute("viewBox",`0 0 ${W} ${H.toFixed(0)}`);
+const path=p=>"M"+p.map(f).map(a=>a.map(n=>n.toFixed(1)).join(",")).join("L")+"Z";
+const r=view==="city"?13:16;
+let h=`<path class="land" d="${path(COAST)}"/><path class="park" d="${path(PARK)}"/>`;
+h+=LBL[view].map(([t,la,lo])=>{const[x,y]=f([la,lo]);return`<text class="lbl" x="${x}" y="${y}" text-anchor="middle">${t}</text>`}).join("");
+const pins=[...items.filter(x=>x.g)];
+const [hx,hy]=f(HOTEL.g);h+=`<g class="pin" transform="translate(${hx},${hy})"><title>Club Quarters Hotel</title><circle r="${r}" fill="#16263A"/><text>${HOTEL.e}</text></g>`;
+for(const x of pins){const[px,py]=f(x.g);if(px<-20||px>W+20||py<-20||py>H+20)continue;
+h+=`<g class="pin ${sel===x.n?"on":""}" data-n="${x.n}" tabindex="0" role="button" aria-label="${x.n}" transform="translate(${px.toFixed(1)},${py.toFixed(1)})"><title>${x.n}</title><circle r="${sel===x.n?r+4:r}" fill="${COL[x.s]}"/><text>${x.e}</text></g>`}
+svg.innerHTML=h}
+function chips(){const cs=[...new Set(D.filter(x=>sec==="all"||x.s===sec).map(x=>x.c))];if(!cs.includes(cat))cat=null;
+document.getElementById("chips").innerHTML=cs.map(c=>`<button class="chip" aria-pressed="${c===cat}" data-c="${c}">${c}</button>`).join("")}
+const id=n=>"c-"+n.replace(/[^a-z0-9]/gi,"");
+function render(){const items=visible();drawMap(items);const out=document.getElementById("out");
+if(!items.length){out.innerHTML='<p class="empty">Nothing matches. Clear the search or filters to see everything.</p>';return}
+let h="";for(const s of ["sights","food","shop"]){for(const c of [...new Set(items.filter(x=>x.s===s).map(x=>x.c))]){const g=items.filter(x=>x.s===s&&x.c===c);
+h+=`<h2>${c} <small>${NAMES[s]}</small></h2><div class="grid">`+g.map(x=>`<article class="card ${sel===x.n?"hl":""}" id="${id(x.n)}"><button class="star" aria-label="Save ${x.n}" aria-pressed="${!!favs[x.n]}" data-n="${x.n}">${favs[x.n]?"★":"☆"}</button><div class="top"><div class="ico" style="background:${COL[x.s]}22">${x.e}</div><div><h3>${x.n}</h3><div class="loc">${x.l}</div></div></div><p class="desc">${x.d}</p><div class="tags">${x.p?`<span class="tag">${x.p}</span>`:""}${x.v?`<span class="tag v">${x.v}</span>`:""}${(x.t||[]).map(t=>`<span class="tag ${t==="Must-do"||t==="Bucket list"?"w":""}">${t}</span>`).join("")}</div><div class="links">${x.g?`<button data-show="${x.n}">Show on map</button>`:""}<a class="map" href="${M(x.q||x.n)}" target="_blank" rel="noopener">Open in Maps</a></div></article>`).join("")+`</div>`}}
+out.innerHTML=h}
+function pick(n,scrollTo){sel=n;const x=D.find(d=>d.n===n);if(x&&x.g){const d=VIEWS.down;const inDown=x.g[0]<d.n&&x.g[0]>d.s&&x.g[1]>d.w&&x.g[1]<d.e;if(view==="down"&&!inDown)setView("city",true)}render();
+if(scrollTo==="card")document.getElementById(id(n))?.scrollIntoView({behavior:"smooth",block:"center"});
+if(scrollTo==="map")document.querySelector(".mapbox").scrollIntoView({behavior:"smooth",block:"start"})}
+function setView(z,quiet){view=z;document.querySelectorAll(".zoom button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.z===z));if(!quiet)render()}
+document.querySelector(".zoom").onclick=e=>{const b=e.target.closest("button");if(b)setView(b.dataset.z)};
+const mapEl=document.getElementById("map");
+mapEl.addEventListener("click",e=>{const g=e.target.closest(".pin[data-n]");if(g)pick(g.dataset.n,"card")});
+mapEl.addEventListener("keydown",e=>{const g=e.target.closest(".pin[data-n]");if(g&&(e.key==="Enter"||e.key===" ")){e.preventDefault();pick(g.dataset.n,"card")}});
+document.querySelector(".seg").onclick=e=>{const b=e.target.closest("button");if(!b)return;sec=b.dataset.sec;document.querySelectorAll(".seg button").forEach(x=>x.setAttribute("aria-pressed",x===b));chips();render()};
+document.getElementById("chips").onclick=e=>{const b=e.target.closest(".chip");if(!b)return;cat=cat===b.dataset.c?null:b.dataset.c;chips();render()};
+document.getElementById("q").oninput=render;document.getElementById("fav").onchange=render;
+document.getElementById("out").onclick=e=>{const st=e.target.closest(".star");if(st){favs[st.dataset.n]=!favs[st.dataset.n];try{localStorage.setItem("sf-favs",JSON.stringify(favs))}catch(err){}render();return}
+const sh=e.target.closest("[data-show]");if(sh)pick(sh.dataset.show,"map")};
+chips();render();
+</script>
+</body>
+</html>
